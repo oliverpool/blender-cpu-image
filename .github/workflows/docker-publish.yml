@@ -7,7 +7,7 @@ name: Docker build and publish
 
 on:
   push:
-    tags: [ 'v*.*.*' ]
+    tags: [ '*.*.*' ]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -55,7 +55,7 @@ jobs:
 
       - name: BLENDER_VERSION
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/v*/}
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
         
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
