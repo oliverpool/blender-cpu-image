@@ -13,7 +13,9 @@ RUN apt-get update && apt-get install -y \
     libxrender1 \
     libxxf86vm1 \
     # libGL
-    libgl1-mesa-glx
+    libgl1-mesa-glx \
+    # libxkbcommon.so.0 needed since 3.4.0 apparently
+    libxkbcommon0
 
 # https://ftp.halifax.rwth-aachen.de/blender/release
 ARG BLENDER_MIRROR=https://mirror.clarkson.edu/blender/release
