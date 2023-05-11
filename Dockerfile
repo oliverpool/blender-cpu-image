@@ -15,7 +15,9 @@ RUN apt-get update && apt-get install -y \
     # libGL
     libgl1-mesa-glx \
     # libxkbcommon.so.0 needed since 3.4.0 apparently
-    libxkbcommon0
+    libxkbcommon0 \
+    # libSM.so.6 needed since 3.5.1 apparently
+    libsm6
 
 # https://ftp.halifax.rwth-aachen.de/blender/release
 ARG BLENDER_MIRROR=https://mirror.clarkson.edu/blender/release
