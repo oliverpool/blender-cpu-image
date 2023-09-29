@@ -43,7 +43,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract version
-        if: github.ref_type == 'tag'
         id: refs
         run: |
           if [[ "${{github.ref_type}}" == "tag" ]]; then
