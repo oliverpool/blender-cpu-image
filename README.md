@@ -9,4 +9,6 @@ The Dockerfile was inspired by https://github.com/nytimes/rd-blender-docker
 
 ## Release process
 
-Add a [new tag](https://github.com/oliverpool/blender-cpu-image/releases/new) with the exact release from: https://download.blender.org/release/ (feel free to open an issue if you need a specific tag).
+To ensure that the build process works, you can push a `pre/v3.6.0` branch and check the action.
+
+When ready, [create](https://github.com/oliverpool/blender-cpu-image/releases/new) a `vX.X.X` tag, with the exact release from: https://download.blender.org/release/.
