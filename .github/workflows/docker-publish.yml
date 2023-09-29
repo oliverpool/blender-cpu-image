@@ -7,7 +7,8 @@ name: Docker build and publish
 
 on:
   push:
-    tags: [ '*.*.*' ]
+    tags: [ 'v*.*.*' ]
+    branches: [ 'pre/v*.*.*' ]
 
 env:
   # Use docker.io for Docker Hub if empty
