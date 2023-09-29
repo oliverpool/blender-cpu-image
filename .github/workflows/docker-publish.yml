@@ -46,9 +46,9 @@ jobs:
         id: refs
         run: |
           if [[ "${{github.ref_type}}" == "tag" ]]; then
-            echo ::set-output name=version::${{ github.ref_name }}
+            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=version::${GITHUB_REF#heads/pre/}
+            echo "version=${GITHUB_REF#refs/heads/pre/}" >> $GITHUB_OUTPUT
           fi
 
       # Extract metadata (tags, labels) for Docker
