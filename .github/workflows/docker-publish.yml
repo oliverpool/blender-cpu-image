@@ -42,15 +42,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract version from tag
+      - name: Extract version
         if: github.ref_type == 'tag'
         id: refs
-        run: echo ::set-output name=version::${{ github.ref_name }}
-
-      - name: Extract version from branch
-        if: github.ref_type == 'branch'
-        id: refs
-        run: echo ::set-output name=version::${GITHUB_REF#heads/pre/}
+        run: |
+          if [[ "${{github.ref_type}}" == "tag" ]]; then
+            echo ::set-output name=version::${{ github.ref_name }}
+          else
+            echo ::set-output name=version::${GITHUB_REF#heads/pre/}
+          fi
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
