@@ -18,21 +18,45 @@ jobs:
           go-version: 'stable'
 
       - name: Check latest blender version from https://api.github.com/repos/blender/blender/
-        id: check
+        id: refs
         run: |
           # split lines to fail on exit != 0
           version="$(go run ./cmd/check-update/main.go)"
-          echo "::set-output name=tag::${version}"
+          echo "version=${version}" >> $GITHUB_OUTPUT
+
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: steps.refs.outputs.tag != ''
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        if: steps.refs.outputs.tag != ''
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ steps.refs.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.refs.outputs.version }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
-        if: steps.check.outputs.tag != ''
-        id: build
+        if: steps.refs.outputs.tag != ''
+        id: build-and-push
         uses: docker/build-push-action@v5
         with:
           build-args: |
-            BLENDER_VERSION=${{ steps.check.outputs.tag }}
+            BLENDER_VERSION=${{ steps.meta.outputs.version }}
           context: .
-          push: false
+          push: ${{ github.ref_type == 'tag' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
