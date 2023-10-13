@@ -10,10 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: false
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: 'stable'
 
@@ -27,7 +29,7 @@ jobs:
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
-        if: steps.refs.outputs.tag != ''
+        if: steps.refs.outputs.version != ''
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -37,7 +39,7 @@ jobs:
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
-        if: steps.refs.outputs.tag != ''
+        if: steps.refs.outputs.version != ''
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -49,7 +51,7 @@ jobs:
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
-        if: steps.refs.outputs.tag != ''
+        if: steps.refs.outputs.version != ''
         id: build-and-push
         uses: docker/build-push-action@v5
         with:
